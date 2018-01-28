@@ -27,6 +27,59 @@ tagc {selfClose} name children = Tag (selfClose, name, [], children)
 tagac : {default False selfClose : Bool} -> String -> List (String, String) -> List Html -> Html
 tagac {selfClose} name attrs children = Tag (selfClose, name, map Attr' attrs, children)
 
+data InputType =
+    Button
+  | Checkbox
+  | Color
+  | Date
+  | DateTimeLocal
+  | Email
+  | File
+  | Hidden
+  | Image
+  | Month
+  | Number
+  | Password
+  | Radio
+  | Range
+  | Reset
+  | Search
+  | Submit
+  | Tel
+  | Text
+  | Time
+  | Url
+  | Week
+
+Show InputType where
+  show t = case t of
+    Button => "button"
+    Checkbox => "checkbox"
+    Color => "color"
+    Date => "date"
+    DateTimeLocal => "datetime-local"
+    Email => "email"
+    File => "file"
+    Hidden => "hidden"
+    Image => "image"
+    Month => "month"
+    Number => "number"
+    Password => "password"
+    Radio => "radio"
+    Range => "range"
+    Reset => "reset"
+    Search => "search"
+    Submit => "submit"
+    Tel => "tel"
+    Text => "text"
+    Time => "time"
+    Url => "url"
+    Week => "week"
+
+
+input : InputType -> List (String, String) -> Html
+input t attrs = taga {selfClose=True} "input" $ (Attr' ("type", show t))::attrs
+
 private
 attrToString : List Attr -> String
 attrToString [] = ""
