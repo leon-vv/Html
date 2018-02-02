@@ -46,7 +46,7 @@ data InputType =
   | Search
   | Submit
   | Tel
-  | Text
+  | TextType -- Text is already defined
   | Time
   | Url
   | Week
@@ -71,7 +71,7 @@ Show InputType where
     Search => "search"
     Submit => "submit"
     Tel => "tel"
-    Text => "text"
+    TextType => "text"
     Time => "time"
     Url => "url"
     Week => "week"
