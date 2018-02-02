@@ -1,12 +1,11 @@
-
 %access public export
 %default total
 
-data Attr = Attr' (String, String)
+data Attr = MkAttr (String, String)
 
 -- Todo: escaping
 Show Attr where
-  show (Attr' (name, val)) = name ++ "=\"" ++ val ++ "\""
+  show (MkAttr (name, val)) = name ++ "=\"" ++ val ++ "\""
 
 -- Self closing, name, content, attributes, children
 data Html = Tag (Bool, String, List Attr, List Html)
@@ -19,13 +18,13 @@ tag : {default False selfClose : Bool} -> String -> Html
 tag {selfClose} name = Tag (selfClose, name, [], [])
 
 taga : {default False selfClose : Bool} -> String -> List (String, String)-> Html
-taga {selfClose} name attrs = Tag (selfClose, name, map Attr' attrs, [])
+taga {selfClose} name attrs = Tag (selfClose, name, map MkAttr attrs, [])
 
 tagc : {default False selfClose : Bool} -> String -> List Html -> Html
 tagc {selfClose} name children = Tag (selfClose, name, [], children)
 
 tagac : {default False selfClose : Bool} -> String -> List (String, String) -> List Html -> Html
-tagac {selfClose} name attrs children = Tag (selfClose, name, map Attr' attrs, children)
+tagac {selfClose} name attrs children = Tag (selfClose, name, map MkAttr attrs, children)
 
 data InputType =
     Button
@@ -78,7 +77,7 @@ Show InputType where
 
 
 input : InputType -> List (String, String) -> Html
-input t attrs = taga {selfClose=True} "input" $ (Attr' ("type", show t))::attrs
+input t attrs = taga {selfClose=True} "input" (("type", show t)::attrs)
 
 private
 attrToString : List Attr -> String
