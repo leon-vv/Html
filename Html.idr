@@ -47,7 +47,7 @@ data InputType =
   | Tel
   | TextType -- Text is already defined
   | Time
-  | Url
+  | UrlType -- Compiler bug (clash with Http.Url it seems)
   | Week
 
 Show InputType where
@@ -72,9 +72,8 @@ Show InputType where
     Tel => "tel"
     TextType => "text"
     Time => "time"
-    Url => "url"
+    UrlType => "url"
     Week => "week"
-
 
 input : InputType -> List (String, String) -> Html
 input t attrs = taga {selfClose=True} "input" (("type", show t)::attrs)
