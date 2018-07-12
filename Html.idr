@@ -107,14 +107,23 @@ toOpenTag : (Bool, String, List Attr, List Html) -> String
 toOpenTag (True, name, attrs, _) = "<" ++ (escapeEntities name) ++ attrToString attrs ++ "/>"
 toOpenTag (False, name, attrs, _) = "<" ++ (escapeEntities name) ++ attrToString attrs ++ ">"
 
-Show Html where
-  show (Text s) = escapeEntities s
-  show (Tag t@(True, _, _, _)) = toOpenTag t
-  show (Tag t@(False, name, attrs, children)) =
-    let open = toOpenTag t ++ "\n"
-    in let inner = unlines (map (assert_total show) children)
-    in open ++ inner ++ "</" ++ (escapeEntities name) ++ ">"
 
+private
+indent : Nat -> String
+indent n = concat $ replicate n "  "
+
+private
+showWithIndent : Html -> Nat -> String
+showWithIndent (Text esc s) n = if esc then escapeEntities s
+                                       else s
+showWithIndent (Tag t@(True, _, _, _)) n = indent n ++ toOpenTag t
+showWithIndent (Tag t@(False, name, attrs, children)) n =
+  let open = indent n ++ toOpenTag t ++ "\n"
+  in let inner = unlines (map (\c => assert_total $ showWithIndent c (S n)) children)
+  in open ++ inner ++ indent n ++ "</" ++ (escapeEntities name) ++ ">"
+
+Show Html where
+  show h = showWithIndent h 0
 
 
 
