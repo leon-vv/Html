@@ -16,18 +16,16 @@ escapeEntities : String -> String
 escapeEntities = unsafePerformIO .
     foreign FFI_JS "htmlEscapeEntities(%0)" (String -> JS_IO String)
 
--- Todo: escaping
 Show Attr where
   show (MkAttr (name, val)) =
     (escapeEntities name) ++ "=\"" ++ (escapeEntities val) ++ "\""
 
-||| Arguments: self closing, name, attributes, children
-data Html = Tag (Bool, String, List Attr, List Html)
-          | Text String
+data Html = Tag (Bool, String, List Attr, List Html) -- self closing, name, attributes, children
+          | Text Bool String -- Escape, content
 
 ||| Output the given string in the HTML document. HTML entities will be escaped.
-text : String -> Html
-text s = Text s
+text : {default True escape: Bool} -> String -> Html
+text {escape} s = Text escape s
 
 ||| Tag without attributes or children.
 tag : {default False selfClose : Bool} -> String -> Html
